@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Room 237</title>
+  <link rel="icon" href="./images/webimg.png" type="image/png" />
+  <script src="./data.js"></script>
+  <link rel="stylesheet" href="./csMain.css" />
+</head>
+
+<body>
+
+  <nav class="nav">
+    <div class="nav-sel-wrap">
+      <select class="nav-sel" id="pageNav" onchange="switchPage(this.value)">
+        <option value="picker">Movie Spinner</option>
+        <option value="watched" selected>Watched</option>
+        <option value="unwatched">Unwatched</option>
+      </select>
+      <span class="nav-arr">&#9660;</span>
+    </div>
+    <button class="nav-gear" onclick="openM('settingsM')" title="Settings">&#9881;</button>
+  </nav>
+
+  <div id="page-picker" class="page">
+    <div class="picker-wrap">
+
+      <div class="picker-main">
+
+        <div class="bo3-box" id="bo3Box">
+          <div class="bo3-lbl" id="bo3Lbl">Best of 3 - Round <span id="bo3Num">0</span>/3</div>
+          <div class="bo3-rounds" id="bo3Rounds">
+            <div class="bo3-r" id="bo3r1">
+              <div class="bo3-rl">Round 1</div>
+              <div class="bo3-rv">-</div>
+            </div>
+            <div class="bo3-r" id="bo3r2">
+              <div class="bo3-rl">Round 2</div>
+              <div class="bo3-rv">-</div>
+            </div>
+            <div class="bo3-r" id="bo3r3">
+              <div class="bo3-rl">Round 3</div>
+              <div class="bo3-rv">-</div>
+            </div>
+          </div>
+          <div class="bo3-tb" id="bo3Tb">
+            <div class="bo3-tb-r">
+              <div class="bo3-tb-rl">Tiebreaker</div>
+              <div class="bo3-tb-rv" id="bo3TbTxt">-</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sp-box">
+          <div class="sp-head">
+            <span class="sp-label">Spinner</span>
+            <span class="sp-status" id="spStatus">Select movies in the panel</span>
+          </div>
+          <div class="sp-vp" id="spVp">
+            <div class="sp-line"></div>
+            <div class="sp-strip" id="spStrip"></div>
+            <div class="sp-empty" id="spEmpty">
+              <div class="sp-empty-t">No movies selected</div>
+            </div>
+          </div>
+          <div class="sp-foot">
+            <button class="sp-btn" id="spinBtn" onclick="doSpin()" disabled>Spin</button>
+          </div>
+        </div>
+
+        <div class="res-box" id="resBox">
+          <div class="res-inner">
+            <div class="res-poster" id="resPoster" style="cursor:pointer" title="Click for details">
+              <div class="res-poster-ph">-</div>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div class="res-sub" id="resSub" style="margin-bottom:4px">Winner</div>
+              <div class="res-title" id="resTitle">-</div>
+              <div class="res-year" id="resYear"></div>
+              <div id="resImdb" style="margin-top:4px"></div>
+            </div>
+            <a class="btn" id="resFindBtn" href="#" target="_blank" rel="noopener"
+               style="display:none;font-size:12px;padding:8px 18px;text-decoration:none;font-weight:600;letter-spacing:.03em;flex-shrink:0">
+              Find Torrent
+            </a>
+            <a class="btn" id="resFindYrBtn" href="#" target="_blank" rel="noopener"
+               style="display:none;font-size:11px;padding:8px 12px;text-decoration:none;font-weight:500;flex-shrink:0;opacity:.6">
+              Find with year
+            </a>
+          </div>
+        </div>
+
+        <button class="skip-btn" id="skipBtn" onclick="skipBo3()">Skip</button>
+
+      </div>
+
+      <div class="picker-side">
+
+        <div class="ps">
+          <div class="ps-ttl">Goons</div>
+
+          <div id="pb-oskaras" class="pb on">
+            <div class="pb-head" onclick="togglePerson('oskaras')">
+              <div class="pb-ck">&#10003;</div>
+              <div class="pb-name">Oskaras</div>
+              <div class="pb-counter">
+                <button class="pb-cb" onclick="event.stopPropagation();chgCnt('oskaras',-1)">&#8722;</button>
+                <span class="pb-cv" id="cnt-oskaras">2</span>
+                <button class="pb-cb" onclick="event.stopPropagation();chgCnt('oskaras',1)">+</button>
+              </div>
+            </div>
+            <div class="pb-movies" id="picks-oskaras"></div>
+          </div>
+
+          <div id="pb-patrikas" class="pb on">
+            <div class="pb-head" onclick="togglePerson('patrikas')">
+              <div class="pb-ck">&#10003;</div>
+              <div class="pb-name">Patrikas</div>
+              <div class="pb-counter">
+                <button class="pb-cb" onclick="event.stopPropagation();chgCnt('patrikas',-1)">&#8722;</button>
+                <span class="pb-cv" id="cnt-patrikas">2</span>
+                <button class="pb-cb" onclick="event.stopPropagation();chgCnt('patrikas',1)">+</button>
+              </div>
+            </div>
+            <div class="pb-movies" id="picks-patrikas"></div>
+          </div>
+
+          <div id="pb-erikas" class="pb on">
+            <div class="pb-head" onclick="togglePerson('erikas')">
+              <div class="pb-ck">&#10003;</div>
+              <div class="pb-name">Erikas</div>
+              <div class="pb-counter">
+                <button class="pb-cb" onclick="event.stopPropagation();chgCnt('erikas',-1)">&#8722;</button>
+                <span class="pb-cv" id="cnt-erikas">2</span>
+                <button class="pb-cb" onclick="event.stopPropagation();chgCnt('erikas',1)">+</button>
+              </div>
+            </div>
+            <div class="pb-movies" id="picks-erikas"></div>
+          </div>
+        </div>
+
+        <div class="ps">
+          <div class="ps-ttl">Custom Pool</div>
+          <div id="cpList"></div>
+          <button class="add-cp" onclick="openM('customM')">+ Add Custom Movie</button>
+        </div>
+
+        <div class="ps" id="oddsPs" style="display:none">
+          <div class="ps-ttl">
+            <span class="coll-btn" id="oddsColl" onclick="toggleColl('oddsColl','oddsBody')">
+              <span class="coll-arr">&#9658;</span>Odds
+            </span>
+          </div>
+          <div class="coll-body" id="oddsBody"></div>
+          <div class="opt-row" id="changeOddsRow"
+               style="display:none;margin-top:6px;padding-top:6px;border-top:1px solid var(--b0)">
+            <div class="opt-lbl">Change Odds</div>
+            <label class="tsw">
+              <input type="checkbox" id="changeOddsToggle" onchange="onChangeOdds()">
+              <span class="tsl"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="ps">
+          <div class="ps-ttl">Options</div>
+          <div class="opt-row">
+            <div class="opt-lbl">Best of 3</div>
+            <label class="tsw">
+              <input type="checkbox" id="bo3Toggle" onchange="onBo3Change()">
+              <span class="tsl"></span>
+            </label>
+          </div>
+          <div class="opt-row" id="autoRollOpt" style="display:none">
+            <div class="opt-lbl">Auto Roll</div>
+            <label class="tsw">
+              <input type="checkbox" id="autoRollToggle" onchange="S.autoRoll=this.checked">
+              <span class="tsl"></span>
+            </label>
+          </div>
+          <div class="opt-row">
+            <div class="opt-lbl">Speed</div>
+            <div style="display:flex;align-items:center">
+              <input class="speed-in" type="text" id="speedInput" value="1"
+                     onchange="onSpeedChange(this.value)" onblur="onSpeedChange(this.value)">
+              <span class="speed-x">x</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="page-watched" class="page active">
+    <div class="sh">
+      <div class="sh-title">Watched</div>
+      <div class="sh-count" id="watchedCount"></div>
+      <select class="sh-sort" id="watchedSort" onchange="renderWatched()">
+        <option value="az">A - Z</option>
+        <option value="imdb">IMDb</option>
+        <option value="year">Year</option>
+        <option value="runtime">Runtime</option>
+        <option value="rating_all">Rating (All)</option>
+        <option value="rating_osk">Oskaras Ratings</option>
+        <option value="rating_pat">Patrikas Ratings</option>
+        <option value="rating_eri">Erikas Ratings</option>
+      </select>
+      <button class="sort-dir-btn" id="watchedDirBtn" onclick="toggleWatchedDir()" title="Toggle sort direction">&#8595;</button>
+      <div class="type-toggle">
+        <button class="type-btn active" id="typeBtnMovies" onclick="setWatchedType('movies')">Movies</button>
+        <button class="type-btn" id="typeBtnShows" onclick="setWatchedType('shows')">Shows</button>
+      </div>
+      <div class="sh-gap"></div>
+    </div>
+    <div class="filter-bar">
+      <input class="fi" id="watchedSearch" placeholder="Search..." oninput="renderWatched()">
+    </div>
+    <div class="grid" id="watchedGrid"></div>
+  </div>
+
+  <div id="page-unwatched" class="page">
+    <div class="sh">
+      <div class="sh-title">Unwatched</div>
+      <div class="sh-count" id="unwatchedCount"></div>
+      <select class="sh-sort" id="unwatchedSort" onchange="renderUnwatched()">
+        <option value="az">A - Z</option>
+        <option value="imdb">IMDb</option>
+        <option value="year">Year</option>
+        <option value="runtime">Runtime</option>
+      </select>
+      <button class="sort-dir-btn" id="unwatchedDirBtn" onclick="toggleUnwatchedDir()" title="Toggle sort direction">&#8595;</button>
+      <div class="type-toggle">
+        <button class="type-btn active" id="typeBtnMoviesUw" onclick="setWatchedType('movies')">Movies</button>
+        <button class="type-btn" id="typeBtnShowsUw" onclick="setWatchedType('shows')">Shows</button>
+      </div>
+      <div class="sh-gap"></div>
+    </div>
+    <div class="filter-bar">
+      <input class="fi" id="unwatchedSearch" placeholder="Search..." oninput="renderUnwatched()">
+      <div class="chip" id="instChip" onclick="toggleInst()">
+        <div class="chip-dot"></div>Installed
+      </div>
+    </div>
+    <div class="grid" id="unwatchedGrid"></div>
+  </div>
+
+  <div class="toast-wrap" id="toastWrap"></div>
+
+  <div class="overlay" id="customM">
+    <div class="modal">
+      <div class="m-head">
+        <div class="m-ttl">Add Custom Movie</div>
+        <button class="m-close" onclick="closeM('customM')">&#10005;</button>
+      </div>
+      <div class="m-body">
+        <p style="font-size:12px;color:var(--t3);margin-bottom:12px">Add a movie w a custom %</p>
+        <div class="srch-row">
+          <input class="srch-in" id="cmSearch" placeholder="Movie title...">
+          <input class="srch-in" id="cmYear" placeholder="Year" style="max-width:80px">
+          <button class="btn btn-primary" onclick="searchOMDB('cm')">Search</button>
+        </div>
+        <div id="cmRes"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="detailM">
+    <div class="modal modal-wide" id="detailModal">
+      <div class="m-head">
+        <div class="m-ttl" id="detMTtl">Movie</div>
+        <div class="m-head-btns">
+          <button class="m-expand" onclick="openExpandedView()" title="Expand with TMDB data">&#10529;</button>
+          <button class="m-close" onclick="closeM('detailM')">&#10005;</button>
+        </div>
+      </div>
+      <div class="m-body" id="detMBody">
+        <div class="ld"><div class="ld-spin"></div>Loading...</div>
+      </div>
+      <div class="m-foot"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="uwDetailM">
+    <div class="modal modal-wide">
+      <div class="m-head">
+        <div class="m-ttl" id="uwDetTtl">Movie</div>
+        <a class="btn" id="uwDetFind" href="#" target="_blank" rel="noopener"
+           style="display:none;font-size:11px;padding:4px 11px;text-decoration:none;margin-left:10px">
+          Find Torrent
+        </a>
+        <a class="btn" id="uwDetFindYr" href="#" target="_blank" rel="noopener"
+           style="display:none;font-size:10px;padding:4px 9px;text-decoration:none;margin-left:4px;opacity:.55">
+          Find with year
+        </a>
+        <div style="flex:1"></div>
+        <div class="m-head-btns">
+          <button class="m-expand" onclick="openExpandedView()" title="Expand with TMDB data">&#10529;</button>
+          <button class="m-close" onclick="closeM('uwDetailM')">&#10005;</button>
+        </div>
+      </div>
+      <div class="m-body" id="uwDetBody">
+        <div class="ld"><div class="ld-spin"></div>Loading...</div>
+      </div>
+      <div class="m-foot"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="expandM">
+    <div class="modal modal-expand">
+      <div class="m-head" id="expHead">
+        <div class="m-ttl" id="expTitle"
+             style="flex:1;display:flex;align-items:center;min-width:0;overflow:hidden;gap:8px">
+          <img id="expHeaderLogo" src="" alt=""
+               style="height:22px;max-width:150px;object-fit:contain;opacity:0;flex-shrink:0;display:none">
+          <span id="expHeaderText" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">-</span>
+        </div>
+        <button class="m-close" onclick="closeM('expandM')">&#10005;</button>
+      </div>
+      <div class="m-body" id="expBody"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="settingsM">
+    <div class="modal">
+      <div class="m-head">
+        <div class="m-ttl">Settings</div>
+        <button class="m-close" onclick="closeM('settingsM')">&#10005;</button>
+      </div>
+      <div class="m-body"></div>
+    </div>
+  </div>
+
+  <script src="./jsMain.js"></script>
+
+</body>
+</html>
